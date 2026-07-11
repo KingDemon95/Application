@@ -310,14 +310,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         }
                       },
                     ),
-                    const SizedBox(width: 16),
-                    SocialButton(
-                      iconPath: '',
-                      onPressed: () {
-                        // TODO: Apple Sign In
-                        showError(context, 'Apple login belum tersedia');
-                      },
-                    ),
                   ],
                 ),
 

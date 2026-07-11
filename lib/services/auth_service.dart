@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter/foundation.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -52,7 +53,13 @@ class AuthService {
   // ─── LOGIN WITH GOOGLE ───────────────────────────────────────
   Future<UserCredential?> loginWithGoogle() async {
     try {
-      final googleUser = await GoogleSignIn().signIn();
+      final googleSignIn = GoogleSignIn(
+        clientId: kIsWeb
+            ? '962529220510-db5rpeo4k4oqpb2odj9pepgctq88oc8a.apps.googleusercontent.com'
+            : null,
+      );
+
+      final googleUser = await googleSignIn.signIn();
       if (googleUser == null) return null; // user cancel
 
       final googleAuth = await googleUser.authentication;
