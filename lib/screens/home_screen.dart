@@ -128,62 +128,80 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 20),
+              const SizedBox(height: 12),
 
-              // ─── Top Bar ────────────────────────────────────────
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Halo, $_firstName $_greetingEmoji',
-                        style: GoogleFonts.poppins(
-                          fontSize: 13,
-                          color: vx.textMedium,
-                        ),
-                      ),
-                      Text(
-                        _greeting,
-                        style: GoogleFonts.poppins(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700,
-                          color: vx.textDark,
-                        ),
-                      ),
-                      Text(
-                        'Kesehatanmu, prioritas kami.',
-                        style: GoogleFonts.poppins(
-                          fontSize: 12,
-                          color: vx.textLight,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      _TopBarButton(
-                        icon: context.isDark
-                            ? Icons.light_mode_rounded
-                            : Icons.dark_mode_rounded,
-                        tooltip: context.isDark ? 'Mode Terang' : 'Mode Gelap',
-                        onTap: () => themeProvider.toggle(),
-                        vx: vx,
-                      ),
-                      const SizedBox(width: 8),
-                      _TopBarButton(
-                        icon: Icons.logout_rounded,
-                        tooltip: 'Logout',
-                        onTap: _logout,
-                        vx: vx,
-                      ),
-                    ],
-                  ),
-                ],
+              // ─── Top Bar (hanya tombol) ─────────────────────────
+              Container(
+                width: double.infinity,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+                decoration: BoxDecoration(
+                  color: vx.primary,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    _HeaderIconButton(
+                      icon: context.isDark
+                          ? Icons.light_mode_rounded
+                          : Icons.dark_mode_rounded,
+                      tooltip: context.isDark ? 'Mode Terang' : 'Mode Gelap',
+                      onTap: () => themeProvider.toggle(),
+                      iconColor: vx.primary,
+                    ),
+                    const SizedBox(width: 10),
+                    _HeaderIconButton(
+                      icon: Icons.logout_rounded,
+                      tooltip: 'Logout',
+                      onTap: _logout,
+                      iconColor: vx.primary,
+                    ),
+                  ],
+                ),
               ),
 
-              const SizedBox(height: 24),
+              const SizedBox(height: 20),
+
+              // ─── Greeting ────────────────────────────────────────
+              Text(
+                'Halo, $_firstName $_greetingEmoji',
+                style: GoogleFonts.poppins(
+                  fontSize: 13,
+                  color: vx.textMedium,
+                ),
+              ),
+              Text(
+                _greeting,
+                style: GoogleFonts.poppins(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                  color: vx.textDark,
+                ),
+              ),
+              Text(
+                'Kesehatanmu, prioritas kami.',
+                style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: vx.textLight,
+                ),
+              ),
+
+              // ─── Ilustrasi Dokter ────────────────────────────────
+              Expanded(
+                child: Stack(
+                  children: [
+                    // Karakter dokter
+                    Center(
+                      child: Image.asset(
+                        'assets/images/doctor.png',
+                        height: 400,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
 
               // ─── Card Cek Gejala ─────────────────────────────────
               Container(
@@ -261,7 +279,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
 
-              const Spacer(),
+              const SizedBox(height: 16),
 
               // ─── Tombol Keluar Aplikasi ──────────────────────────
               SizedBox(
@@ -288,7 +306,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
 
-              const SizedBox(height: 28),
+              const SizedBox(height: 24),
             ],
           ),
         ),
@@ -297,18 +315,18 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-// ─── Top Bar Button ───────────────────────────────────────────────────────────
-class _TopBarButton extends StatelessWidget {
+// ─── Header Icon Button (tombol bulat putih di top bar) ────────────────────
+class _HeaderIconButton extends StatelessWidget {
   final IconData icon;
   final String tooltip;
   final VoidCallback onTap;
-  final ValenxColors vx;
+  final Color iconColor;
 
-  const _TopBarButton({
+  const _HeaderIconButton({
     required this.icon,
     required this.tooltip,
     required this.onTap,
-    required this.vx,
+    required this.iconColor,
   });
 
   @override
@@ -318,14 +336,13 @@ class _TopBarButton extends StatelessWidget {
       child: GestureDetector(
         onTap: onTap,
         child: Container(
-          width: 42,
-          height: 42,
-          decoration: BoxDecoration(
-            color: vx.surface,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: vx.cardBorder),
+          width: 40,
+          height: 40,
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.circle,
           ),
-          child: Icon(icon, color: vx.textMedium, size: 20),
+          child: Icon(icon, color: iconColor, size: 20),
         ),
       ),
     );

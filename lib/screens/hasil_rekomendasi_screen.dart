@@ -237,14 +237,10 @@ class _RekomendasiList extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
-        ...rekomendasi.asMap().entries.map((entry) {
-          final i = entry.key;
-          final rek = entry.value;
+        ...rekomendasi.map((rek) {
           final detail = rek['detailObat'] as Map<String, dynamic>?;
           final namaObat = detail?['namaObat'] ?? rek['obatId'] ?? '-';
-          final jenisObat = detail?['jenisRekomendasi'] == 'herbal'
-              ? 'Herbal'
-              : 'Obat';
+          final golonganObat = detail?['golonganObat'] as String?;
           final dosisAturan = rek['dosisAturanPakai'] as String? ?? '-';
 
           // Subtitle: fungsi obat dari gejala
@@ -260,9 +256,8 @@ class _RekomendasiList extends StatelessWidget {
           }
 
           return _ObatCard(
-            nomor: i + 1,
             namaObat: namaObat,
-            jenis: jenisObat,
+            golonganObat: golonganObat,
             subtitle: subtitle,
             dosis: dosisAturan,
             rekomendasiData: rek,
@@ -275,27 +270,39 @@ class _RekomendasiList extends StatelessWidget {
 }
 
 class _ObatCard extends StatelessWidget {
-  final int nomor;
   final String namaObat;
-  final String jenis;
+  final String? golonganObat;
   final String subtitle;
   final String dosis;
   final Map<String, dynamic> rekomendasiData;
   final int usiaBulan;
 
   const _ObatCard({
-    required this.nomor,
     required this.namaObat,
-    required this.jenis,
+    required this.golonganObat,
     required this.subtitle,
     required this.dosis,
     required this.rekomendasiData,
     required this.usiaBulan,
   });
 
+  // Mapping golonganObat -> asset gambar logo
+  String? get _logoAsset {
+    switch (golonganObat) {
+      case 'bebas':
+        return 'assets/images/bebas.png';
+      case 'bebas_terbatas':
+        return 'assets/images/bebas_terbatas.png';
+      case 'herbal':
+        return 'assets/images/herbal.png';
+      default:
+        return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final isHerbal = jenis == 'Herbal';
+    final logoAsset = _logoAsset;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 14),
@@ -309,59 +316,40 @@ class _ObatCard extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Ikon obat
+            // Logo obat sesuai golonganObat
             Container(
               width: 56,
               height: 56,
               decoration: BoxDecoration(
-                color: isHerbal
-                    ? Colors.green.withValues(alpha: 0.1)
-                    : context.vx.chipTeal,
+                color: context.vx.chipTeal,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(
-                isHerbal
-                    ? Icons.eco_outlined
-                    : Icons.medication_outlined,
-                color: isHerbal ? Colors.green : context.vx.primary,
-                size: 28,
-              ),
+              child: logoAsset != null
+                  ? Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Image.asset(
+                        logoAsset,
+                        fit: BoxFit.contain,
+                      ),
+                    )
+                  : Icon(
+                      Icons.medication_outlined,
+                      color: context.vx.primary,
+                      size: 28,
+                    ),
             ),
             const SizedBox(width: 14),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          namaObat,
-                          style: GoogleFonts.poppins(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: context.vx.textDark,
-                          ),
-                        ),
-                      ),
-                      if (nomor == 1)
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 2),
-                          decoration: BoxDecoration(
-                            color: context.vx.primary.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Text(
-                            'Utama',
-                            style: GoogleFonts.poppins(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w600,
-                              color: context.vx.primary,
-                            ),
-                          ),
-                        ),
-                    ],
+                  Text(
+                    namaObat,
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: context.vx.textDark,
+                    ),
                   ),
                   const SizedBox(height: 2),
                   Text(
