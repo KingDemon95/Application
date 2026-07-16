@@ -150,195 +150,242 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.white,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 48),
-
-                // ─── Header ──────────────────────────────────────
-                Text(
-                  'Selamat Datang',
-                  style: GoogleFonts.poppins(
-                    fontSize: 26,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.textDark,
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/doodle.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 24),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 420),
+                child: Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.circular(28),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.08),
+                        blurRadius: 24,
+                        offset: const Offset(0, 10),
+                      ),
+                    ],
                   ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  'Masuk untuk melanjutkan.',
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    color: AppColors.textMedium,
-                  ),
-                ),
-
-                const SizedBox(height: 36),
-
-                // ─── Form ─────────────────────────────────────────
-                ValenxInput(
-                  hint: 'E-mail',
-                  controller: _emailCtrl,
-                  prefixIcon: Icons.email_outlined,
-                  keyboardType: TextInputType.emailAddress,
-                  validator: (v) {
-                    if (v == null || v.trim().isEmpty) {
-                      return 'Email tidak boleh kosong';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 14),
-
-                ValenxInput(
-                  hint: 'Password',
-                  controller: _passCtrl,
-                  prefixIcon: Icons.lock_outline_rounded,
-                  isPassword: true,
-                  validator: (v) {
-                    if (v == null || v.isEmpty) {
-                      return 'Password tidak boleh kosong';
-                    }
-                    return null;
-                  },
-                ),
-
-                const SizedBox(height: 12),
-
-                // ─── Lupa Password ────────────────────────────────
-                GestureDetector(
-                  onTap: _showForgotPassword,
-                  child: Text(
-                    'Lupa password?',
-                    style: GoogleFonts.poppins(
-                      fontSize: 13,
-                      color: AppColors.textMedium,
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 16),
-
-                // ─── Remember Me ──────────────────────────────────
-                Row(
-                  children: [
-                    SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: Checkbox(
-                        value: _rememberMe,
-                        onChanged: (v) =>
-                            setState(() => _rememberMe = v ?? false),
-                        activeColor: AppColors.primary,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        side: const BorderSide(
-                            color: AppColors.inputBorder, width: 1.5),
-                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Text(
-                      'Ingat saya',
-                      style: GoogleFonts.poppins(
-                        fontSize: 13,
-                        color: AppColors.textMedium,
-                      ),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 28),
-
-                // ─── Masuk Button ─────────────────────────────────
-                PrimaryButton(
-                  text: 'Masuk',
-                  onPressed: _login,
-                  isLoading: _isLoading,
-                ),
-
-                const SizedBox(height: 24),
-
-                // ─── Divider ──────────────────────────────────────
-                Row(
-                  children: [
-                    const Expanded(child: Divider(color: AppColors.inputBorder)),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      child: Text(
-                        'atau masuk dengan',
-                        style: GoogleFonts.poppins(
-                          fontSize: 12,
-                          color: AppColors.textLight,
-                        ),
-                      ),
-                    ),
-                    const Expanded(child: Divider(color: AppColors.inputBorder)),
-                  ],
-                ),
-
-                const SizedBox(height: 20),
-
-                // ─── Social Login ─────────────────────────────────
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SocialButton(
-                      iconPath: 'G',
-                      onPressed: () async {
-                        try {
-                          final result = await _auth.loginWithGoogle();
-                          if (!mounted) return;
-                          if (result != null) {
-                            Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) => const HomeScreen()),
-                              (_) => false,
-                            );
-                          }
-                        } catch (e) {
-                          if (!mounted) return;
-                          showError(context, e.toString());
-                        }
-                      },
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 28),
-
-                // ─── Link ke Register ─────────────────────────────
-                Center(
-                  child: Text.rich(
-                    TextSpan(
-                      text: 'Belum punya akun? ',
-                      style: GoogleFonts.poppins(
-                        fontSize: 13,
-                        color: AppColors.textMedium,
-                      ),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        WidgetSpan(
-                          child: GestureDetector(
-                            onTap: () => Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) => const RegisterScreen()),
+                        // ─── Header ──────────────────────────────
+                        Text(
+                          'Selamat Datang',
+                          style: GoogleFonts.poppins(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.textDark,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Masuk untuk melanjutkan.',
+                          style: GoogleFonts.poppins(
+                            fontSize: 13,
+                            color: AppColors.textMedium,
+                          ),
+                        ),
+
+                        const SizedBox(height: 24),
+
+                        // ─── Form ─────────────────────────────────
+                        ValenxInput(
+                          hint: 'E-mail',
+                          controller: _emailCtrl,
+                          prefixIcon: Icons.email_outlined,
+                          keyboardType: TextInputType.emailAddress,
+                          validator: (v) {
+                            if (v == null || v.trim().isEmpty) {
+                              return 'Email tidak boleh kosong';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 14),
+
+                        ValenxInput(
+                          hint: 'Password',
+                          controller: _passCtrl,
+                          prefixIcon: Icons.lock_outline_rounded,
+                          isPassword: true,
+                          validator: (v) {
+                            if (v == null || v.isEmpty) {
+                              return 'Password tidak boleh kosong';
+                            }
+                            return null;
+                          },
+                        ),
+
+                        const SizedBox(height: 10),
+
+                        // ─── Lupa Password ────────────────────────
+                        GestureDetector(
+                          onTap: _showForgotPassword,
+                          child: Text(
+                            'Lupa password?',
+                            style: GoogleFonts.poppins(
+                              fontSize: 13,
+                              color: AppColors.textMedium,
                             ),
-                            child: Text(
-                              'Daftar',
+                          ),
+                        ),
+
+                        const SizedBox(height: 12),
+
+                        // ─── Remember Me ──────────────────────────
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: Checkbox(
+                                value: _rememberMe,
+                                onChanged: (v) =>
+                                    setState(() => _rememberMe = v ?? false),
+                                activeColor: AppColors.primary,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                side: const BorderSide(
+                                    color: AppColors.inputBorder, width: 1.5),
+                                materialTapTargetSize:
+                                    MaterialTapTargetSize.shrinkWrap,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              'Ingat saya',
                               style: GoogleFonts.poppins(
                                 fontSize: 13,
-                                color: AppColors.primary,
-                                fontWeight: FontWeight.w600,
+                                color: AppColors.textMedium,
                               ),
+                            ),
+                          ],
+                        ),
+
+                        const SizedBox(height: 24),
+
+                        // ─── Masuk Button ──────────────────────────
+                        PrimaryButton(
+                          text: 'Masuk',
+                          onPressed: _login,
+                          isLoading: _isLoading,
+                        ),
+
+                        const SizedBox(height: 20),
+
+                        // ─── Divider ───────────────────────────────
+                        Row(
+                          children: [
+                            const Expanded(
+                                child: Divider(color: AppColors.inputBorder)),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 12),
+                              child: Text(
+                                'atau masuk dengan',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 12,
+                                  color: AppColors.textLight,
+                                ),
+                              ),
+                            ),
+                            const Expanded(
+                                child: Divider(color: AppColors.inputBorder)),
+                          ],
+                        ),
+
+                        const SizedBox(height: 20),
+
+                        // ─── Social Login (Google) ─────────────────
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            GestureDetector(
+                              onTap: () async {
+                                try {
+                                  final result =
+                                      await _auth.loginWithGoogle();
+                                  if (!mounted) return;
+                                  if (result != null) {
+                                    Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (_) =>
+                                              const HomeScreen()),
+                                      (_) => false,
+                                    );
+                                  }
+                                } catch (e) {
+                                  if (!mounted) return;
+                                  showError(context, e.toString());
+                                }
+                              },
+                              child: Container(
+                                width: 52,
+                                height: 52,
+                                padding: const EdgeInsets.all(14),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                      color: AppColors.inputBorder),
+                                ),
+                                child: Image.asset(
+                                  'assets/images/google-symbol.png',
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        const SizedBox(height: 24),
+
+                        // ─── Link ke Register ──────────────────────
+                        Center(
+                          child: Text.rich(
+                            TextSpan(
+                              text: 'Belum punya akun? ',
+                              style: GoogleFonts.poppins(
+                                fontSize: 13,
+                                color: AppColors.textMedium,
+                              ),
+                              children: [
+                                WidgetSpan(
+                                  child: GestureDetector(
+                                    onTap: () => Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (_) =>
+                                              const RegisterScreen()),
+                                    ),
+                                    child: Text(
+                                      'Daftar',
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 13,
+                                        color: AppColors.primary,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -346,9 +393,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                 ),
-
-                const SizedBox(height: 32),
-              ],
+              ),
             ),
           ),
         ),
