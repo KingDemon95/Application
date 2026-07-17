@@ -8,6 +8,7 @@ import '../services/notification_service.dart';
 import '../main.dart'; // untuk themeProvider
 import 'login_screen.dart';
 import 'symptom_screen.dart';
+import 'pengingat_list_screen.dart'; // TODO: pastikan file ini ada, lihat catatan di bawah
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -130,7 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               const SizedBox(height: 12),
 
-              // ─── Top Bar (hanya tombol) ─────────────────────────
+              // ─── Top Bar ─────────────────────────
               Container(
                 width: double.infinity,
                 padding:
@@ -140,22 +141,39 @@ class _HomeScreenState extends State<HomeScreen> {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     _HeaderIconButton(
-                      icon: context.isDark
-                          ? Icons.light_mode_rounded
-                          : Icons.dark_mode_rounded,
-                      tooltip: context.isDark ? 'Mode Terang' : 'Mode Gelap',
-                      onTap: () => themeProvider.toggle(),
+                      icon: Icons.notifications_active_rounded,
+                      tooltip: 'Pengingat Obat',
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => const PengingatListScreen()),
+                        );
+                      },
                       iconColor: vx.primary,
                     ),
-                    const SizedBox(width: 10),
-                    _HeaderIconButton(
-                      icon: Icons.logout_rounded,
-                      tooltip: 'Logout',
-                      onTap: _logout,
-                      iconColor: vx.primary,
+                    Row(
+                      children: [
+                        _HeaderIconButton(
+                          icon: context.isDark
+                              ? Icons.light_mode_rounded
+                              : Icons.dark_mode_rounded,
+                          tooltip:
+                              context.isDark ? 'Mode Terang' : 'Mode Gelap',
+                          onTap: () => themeProvider.toggle(),
+                          iconColor: vx.primary,
+                        ),
+                        const SizedBox(width: 10),
+                        _HeaderIconButton(
+                          icon: Icons.logout_rounded,
+                          tooltip: 'Logout',
+                          onTap: _logout,
+                          iconColor: vx.primary,
+                        ),
+                      ],
                     ),
                   ],
                 ),

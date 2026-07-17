@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../models/pengingat_model.dart';
@@ -27,10 +28,24 @@ class _PengingatDetailScreenState extends State<PengingatDetailScreen> {
   bool _loading = true;
   bool _sudahMunculWarning = false; // agar popup hari ke-3 hanya muncul sekali
 
+  // Timer buat refresh tampilan tiap menit, supaya status jadwal
+  // (Akan datang / Saat ini / Terlewat) berubah otomatis tanpa perlu
+  // keluar-masuk halaman.
+  Timer? _autoRefreshTimer;
+
   @override
   void initState() {
     super.initState();
     _loadData();
+    _autoRefreshTimer = Timer.periodic(const Duration(minutes: 1), (_) {
+      if (mounted) setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _autoRefreshTimer?.cancel();
+    super.dispose();
   }
 
   Future<void> _loadData() async {
@@ -161,14 +176,13 @@ class _PengingatDetailScreenState extends State<PengingatDetailScreen> {
     // Catat ke Firestore
     await _service.sudahMinum(p.id);
 
-    // Reschedule notif selanjutnya (opsional — karena sudah repeat daily)
-    // Notifikasi harian otomatis sudah berjalan, jadi tidak perlu reschedule manual
-    // Tapi bisa update badge / status
-
     if (!mounted) return;
 
     // Reload data + tampilkan feedback
-    _loadData();
+    await _loadData();
+
+    if (!mounted) return;
+    final pBaru = _pengingat;
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -179,7 +193,7 @@ class _PengingatDetailScreenState extends State<PengingatDetailScreen> {
             const SizedBox(width: 8),
             Expanded(
               child: Text(
-                'Tercatat! Jadwal berikutnya pukul ${p.jadwalBerikutnya ?? '-'}',
+                'Tercatat! Jadwal berikutnya pukul ${pBaru?.jadwalBerikutnya ?? '-'}',
                 style: GoogleFonts.poppins(fontSize: 13),
               ),
             ),
@@ -347,7 +361,7 @@ class _PengingatDetailScreenState extends State<PengingatDetailScreen> {
       );
     }
 
-    // Cek apakah baru saja minum (dalam 30 menit terakhir)
+    // Cek apakah baru saja minum (dalam 30 menit terakhir) -> khusus buat banner.
     final baruMinum = p.terakhirDiminum != null &&
         DateTime.now().difference(p.terakhirDiminum!).inMinutes <= 30;
 
@@ -388,16 +402,13 @@ class _PengingatDetailScreenState extends State<PengingatDetailScreen> {
                     ),
                   ),
                   const SizedBox(height: 12),
-                  ...p.jadwalLengkap.asMap().entries.map(
-                        (e) => _JadwalItem(
-                          urutan: e.key + 1,
-                          jam: e.value,
-                          dosis: p.dosisAturanPakai,
-                          isSaatIni: p.isJadwalSaatIni(e.value),
-                          sudahDiminum: baruMinum &&
-                              p.isJadwalSaatIni(e.value),
-                        ),
-                      ),
+                  ...p.jadwalLengkap.map(
+                    (jam) => _JadwalItem(
+                      jam: jam,
+                      dosis: p.dosisAturanPakai,
+                      status: p.statusJadwal(jam),
+                    ),
+                  ),
 
                   const SizedBox(height: 20),
 
@@ -696,34 +707,61 @@ class _InfoRow extends StatelessWidget {
 
 // ─── Item Jadwal ──────────────────────────────────────────────────────────────
 class _JadwalItem extends StatelessWidget {
-  final int urutan;
   final String jam;
   final String dosis;
-  final bool isSaatIni;
-  final bool sudahDiminum;
+  final JadwalStatus status;
 
   const _JadwalItem({
-    required this.urutan,
     required this.jam,
     required this.dosis,
-    required this.isSaatIni,
-    required this.sudahDiminum,
+    required this.status,
   });
 
   @override
   Widget build(BuildContext context) {
-    Color bgColor = context.vx.surface;
-    Color borderColor = context.vx.cardBorder;
-    String statusLabel = 'Akan datang';
+    late Color bgColor;
+    late Color borderColor;
+    late Color badgeColor;
+    late Color badgeTextColor;
+    late IconData statusIcon;
+    late String statusLabel;
 
-    if (sudahDiminum) {
-      bgColor = Colors.green.shade50;
-      borderColor = Colors.green.shade200;
-      statusLabel = 'Sudah diminum';
-    } else if (isSaatIni) {
-      bgColor = context.vx.chipTeal;
-      borderColor = context.vx.primary;
-      statusLabel = 'Saat ini';
+    switch (status) {
+      case JadwalStatus.sudahDiminum:
+        bgColor = Colors.green.shade50;
+        borderColor = Colors.green.shade200;
+        badgeColor = Colors.green.shade100;
+        badgeTextColor = Colors.green.shade700;
+        statusIcon = Icons.check_circle_rounded;
+        statusLabel = 'Sudah diminum';
+        break;
+
+      case JadwalStatus.saatIni:
+        bgColor = context.vx.chipTeal;
+        borderColor = context.vx.primary;
+        badgeColor = context.vx.primary;
+        badgeTextColor = Colors.white;
+        statusIcon = Icons.access_time_rounded;
+        statusLabel = 'Saat ini';
+        break;
+
+      case JadwalStatus.terlewat:
+        bgColor = Colors.red.shade50;
+        borderColor = Colors.red.shade200;
+        badgeColor = Colors.red.shade100;
+        badgeTextColor = Colors.red.shade700;
+        statusIcon = Icons.error_rounded;
+        statusLabel = 'Terlewat';
+        break;
+
+      case JadwalStatus.akanDatang:
+        bgColor = context.vx.surface;
+        borderColor = context.vx.cardBorder;
+        badgeColor = context.vx.inputFill;
+        badgeTextColor = context.vx.textLight;
+        statusIcon = Icons.schedule_rounded;
+        statusLabel = 'Akan datang';
+        break;
     }
 
     return Container(
@@ -771,38 +809,20 @@ class _JadwalItem extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
             decoration: BoxDecoration(
-              color: sudahDiminum
-                  ? Colors.green.shade100
-                  : isSaatIni
-                      ? context.vx.primary
-                      : context.vx.inputFill,
+              color: badgeColor,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                if (sudahDiminum)
-                  Icon(Icons.check_circle_rounded,
-                      color: Colors.green.shade600, size: 12),
-                if (!sudahDiminum)
-                  Icon(
-                    isSaatIni
-                        ? Icons.access_time_rounded
-                        : Icons.schedule_rounded,
-                    color: isSaatIni ? Colors.white : context.vx.textLight,
-                    size: 12,
-                  ),
+                Icon(statusIcon, color: badgeTextColor, size: 12),
                 const SizedBox(width: 3),
                 Text(
                   statusLabel,
                   style: GoogleFonts.poppins(
                     fontSize: 11,
                     fontWeight: FontWeight.w500,
-                    color: sudahDiminum
-                        ? Colors.green.shade700
-                        : isSaatIni
-                            ? Colors.white
-                            : context.vx.textLight,
+                    color: badgeTextColor,
                   ),
                 ),
               ],

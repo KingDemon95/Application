@@ -40,6 +40,78 @@ class _SymptomScreenState extends State<SymptomScreen> {
     },
   ];
 
+  Widget _buildCard(Map<String, dynamic> s, ValenxColors colors) {
+    final isSelected = _selected == s['id'];
+
+    return GestureDetector(
+      onTap: () => setState(() => _selected = s['id']),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        width: double.infinity,
+        decoration: BoxDecoration(
+          // Card terpilih:
+          // light = teal muda
+          // dark = teal gelap transparan
+          color: isSelected
+              ? colors.primary.withValues(alpha: 0.10)
+              : colors.surface,
+
+          borderRadius: BorderRadius.circular(16),
+
+          border: Border.all(
+            color: isSelected ? colors.primary : colors.cardBorder,
+            width: isSelected ? 2 : 1,
+          ),
+        ),
+        padding: const EdgeInsets.all(14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // ─── Lingkaran icon ─────────────────────
+            Container(
+              width: 42,
+              height: 42,
+              decoration: BoxDecoration(
+                color: isSelected
+                    ? colors.primary.withValues(alpha: 0.15)
+                    : colors.chipTeal,
+                borderRadius: BorderRadius.circular(11),
+              ),
+              child: Icon(
+                s['icon'] as IconData,
+                color: colors.primary,
+                size: 21,
+              ),
+            ),
+
+            const SizedBox(height: 12),
+
+            Text(
+              s['name'],
+              style: GoogleFonts.poppins(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                color: colors.textDark,
+              ),
+            ),
+
+            const SizedBox(height: 2),
+
+            Text(
+              s['desc'],
+              style: GoogleFonts.poppins(
+                fontSize: 11,
+                color: colors.textLight,
+                height: 1.4,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     // Ini mengambil warna sesuai tema yang sedang aktif.
@@ -83,120 +155,55 @@ class _SymptomScreenState extends State<SymptomScreen> {
             children: [
               const SizedBox(height: 16),
 
-              Text(
-                'Pilih gejala yang kamu alami.',
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  // Sebelumnya: AppColors.textMedium
-                  color: colors.textMedium,
-                ),
+              // ─── Maskot dokter + speech bubble ─────────────────────
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Lebar dilebarin supaya height 275 beneran terpakai penuh,
+                  // sebelumnya width 150 terlalu sempit jadi gambar
+                  // disusutkan lagi oleh BoxFit.contain (kena batas lebar
+                  // duluan sebelum tingginya sempat mencapai 275).
+                  SizedBox(
+                    width: 200,
+                    height: 275,
+                    child: Image.asset(
+                      'assets/images/doctor1.png',
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: _SpeechBubble(colors: colors),
+                  ),
+                ],
               ),
 
-              const SizedBox(height: 24),
+              const SizedBox(height: 20),
 
-              // ─── Grid Gejala ──────────────────────────────────────
+              // ─── Grid Gejala (meregang ngisi sisa ruang) ───────────
               Expanded(
-                child: GridView.builder(
-                  itemCount: _symptoms.length,
-                  gridDelegate:
-                      const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 14,
-                    mainAxisSpacing: 14,
-                    childAspectRatio: 1.1,
-                  ),
-                  itemBuilder: (ctx, i) {
-                    final s = _symptoms[i];
-                    final isSelected = _selected == s['id'];
-
-                    return GestureDetector(
-                      onTap: () => setState(() => _selected = s['id']),
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 200),
-                        decoration: BoxDecoration(
-                          // Card terpilih:
-                          // light = teal muda
-                          // dark = teal gelap transparan
-                          color: isSelected
-                              ? colors.primary.withValues(alpha: 0.10)
-                              : colors.surface,
-
-                          borderRadius: BorderRadius.circular(16),
-
-                          border: Border.all(
-                            color: isSelected
-                                ? colors.primary
-                                : colors.cardBorder,
-                            width: isSelected ? 2 : 1,
-                          ),
-                        ),
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // ─── Lingkaran icon ─────────────────────
-                            Container(
-                              width: 48,
-                              height: 48,
-                              decoration: BoxDecoration(
-                                color: isSelected
-                                    ? colors.primary.withValues(alpha: 0.15)
-                                    : colors.chipTeal,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Icon(
-                                s['icon'] as IconData,
-                                color: colors.primary,
-                                size: 24,
-                              ),
-                            ),
-
-                            const Spacer(),
-
-                            Text(
-                              s['name'],
-                              style: GoogleFonts.poppins(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
-                                color: colors.textDark,
-                              ),
-                            ),
-
-                            const SizedBox(height: 2),
-
-                            Text(
-                              s['desc'],
-                              style: GoogleFonts.poppins(
-                                fontSize: 11,
-                                color: colors.textLight,
-                                height: 1.4,
-                              ),
-                            ),
-                          ],
-                        ),
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Expanded(child: _buildCard(_symptoms[0], colors)),
+                          const SizedBox(width: 14),
+                          Expanded(child: _buildCard(_symptoms[1], colors)),
+                        ],
                       ),
-                    );
-                  },
-                ),
-              ),
-
-              const SizedBox(height: 16),
-
-              // ─── Info bawah ───────────────────────────────────────
-              Container(
-                padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  color: colors.chipTeal,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  'Pilih satu gejala utama yang paling mengganggu saat ini.',
-                  style: GoogleFonts.poppins(
-                    fontSize: 12,
-                    color: colors.primary,
-                    height: 1.4,
-                  ),
-                  textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 14),
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Expanded(child: _buildCard(_symptoms[2], colors)),
+                          const SizedBox(width: 14),
+                          Expanded(child: _buildCard(_symptoms[3], colors)),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
 
@@ -256,4 +263,69 @@ class _SymptomScreenState extends State<SymptomScreen> {
       ),
     );
   }
+}
+
+// ─── Speech bubble instruksi ──────────────────────────────────────────────
+class _SpeechBubble extends StatelessWidget {
+  final ValenxColors colors;
+  const _SpeechBubble({required this.colors});
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      painter: _BubbleTailPainter(color: colors.chipTeal),
+      child: Container(
+        margin: const EdgeInsets.only(left: 10),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: colors.chipTeal,
+          borderRadius: BorderRadius.circular(18),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Pilih satu gejala',
+              style: GoogleFonts.poppins(
+                fontSize: 15,
+                fontWeight: FontWeight.w700,
+                color: colors.primary,
+              ),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              'yang paling mengganggu saat ini, ya!',
+              style: GoogleFonts.poppins(
+                fontSize: 13,
+                color: colors.textMedium,
+                height: 1.4,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// Segitiga kecil "ekor" bubble yang mengarah ke kiri (ke arah maskot)
+class _BubbleTailPainter extends CustomPainter {
+  final Color color;
+  const _BubbleTailPainter({required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()..color = color;
+    final path = Path()
+      ..moveTo(10, size.height / 2 - 8)
+      ..lineTo(0, size.height / 2)
+      ..lineTo(10, size.height / 2 + 8)
+      ..close();
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant _BubbleTailPainter oldDelegate) =>
+      oldDelegate.color != color;
 }

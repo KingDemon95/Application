@@ -57,7 +57,16 @@ class PengingatService {
   }
 
   // ─── Generate baseId dari pengingatId untuk notifikasi ───────────────────
+  // Pakai djb2 hash manual (bukan String.hashCode bawaan Dart), karena
+  // hashCode bawaan pakai random seed yang beda tiap sesi app —
+  // jadi ID yang dihasilkan waktu jadwalkan notifikasi bisa gak sama lagi
+  // waktu mau dibatalkan di sesi lain. djb2 di bawah ini deterministic:
+  // input yang sama selalu menghasilkan angka yang sama, kapan pun dipanggil.
   static int generateBaseId(String pengingatId) {
-    return pengingatId.hashCode.abs() % 100000;
+    int hash = 5381;
+    for (final c in pengingatId.codeUnits) {
+      hash = ((hash << 5) + hash + c) & 0x7FFFFFFF; // & 0x7FFFFFFF jaga tetap positif & 31-bit
+    }
+    return hash % 100000;
   }
 }
