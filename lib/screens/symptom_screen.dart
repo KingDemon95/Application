@@ -18,25 +18,25 @@ class _SymptomScreenState extends State<SymptomScreen> {
       'id': 'flu',
       'name': 'Flu',
       'desc': 'Pilek, hidung\ntersumbat, bersin',
-      'icon': Icons.sick_outlined,
+      'icon': '🤧',
     },
     {
       'id': 'batuk',
       'name': 'Batuk',
       'desc': 'Batuk kering\natau berdahak',
-      'icon': Icons.air_outlined,
+      'icon': '😮‍💨',
     },
     {
       'id': 'demam',
       'name': 'Demam',
       'desc': 'Suhu tubuh\nmeningkat, menggigil',
-      'icon': Icons.thermostat_outlined,
+      'icon': '🤒',
     },
     {
       'id': 'diare',
       'name': 'Diare',
       'desc': 'Buang air besar\nlebih sering',
-      'icon': Icons.water_drop_outlined,
+      'icon': '🤢',
     },
   ];
 
@@ -68,20 +68,20 @@ class _SymptomScreenState extends State<SymptomScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // ─── Lingkaran icon ─────────────────────
+            // ─── Lingkaran icon (emoji) ─────────────────────
             Container(
               width: 42,
               height: 42,
+              alignment: Alignment.center,
               decoration: BoxDecoration(
                 color: isSelected
                     ? colors.primary.withValues(alpha: 0.15)
                     : colors.chipTeal,
                 borderRadius: BorderRadius.circular(11),
               ),
-              child: Icon(
-                s['icon'] as IconData,
-                color: colors.primary,
-                size: 21,
+              child: Text(
+                s['icon'] as String,
+                style: const TextStyle(fontSize: 20),
               ),
             ),
 
