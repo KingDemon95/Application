@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../theme/app_theme.dart';
 import 'detail_obat_screen.dart';
+import '../widgets/pattern_background.dart';
 
 class HasilRekomendasiScreen extends StatefulWidget {
   final String symptomId;
@@ -79,7 +80,11 @@ class _HasilRekomendasiScreenState extends State<HasilRekomendasiScreen> {
         _rekomendasi = result;
         _loading = false;
       });
-    } catch (e) {
+    } catch (e, s) {
+      debugPrint("========== FIREBASE ERROR ==========");
+      debugPrint(e.toString());
+      debugPrint(s.toString());
+
       setState(() {
         _error = e.toString();
         _loading = false;
@@ -116,69 +121,71 @@ class _HasilRekomendasiScreenState extends State<HasilRekomendasiScreen> {
           ),
         ),
       ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Info gejala + usia
-            Container(
-              width: double.infinity,
-              color: context.vx.surface,
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
-              child: Row(
-                children: [
-                  _InfoChip(
-                    icon: Icons.medical_services_outlined,
-                    label: widget.symptomName,
-                  ),
-                  const SizedBox(width: 8),
-                  _InfoChip(
-                    icon: Icons.person_outline_rounded,
-                    label: _labelUsia,
-                  ),
-                ],
+      body: PatternBackground(          // ← baris ini yang ganti
+        child: SafeArea(
+          child: Column(
+            children: [
+              // Info gejala + usia
+              Container(
+                width: double.infinity,
+                color: context.vx.surface,
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+                child: Row(
+                  children: [
+                    _InfoChip(
+                      icon: Icons.medical_services_outlined,
+                      label: widget.symptomName,
+                    ),
+                    const SizedBox(width: 8),
+                    _InfoChip(
+                      icon: Icons.person_outline_rounded,
+                      label: _labelUsia,
+                    ),
+                  ],
+                ),
               ),
-            ),
 
-            Expanded(
-              child: _loading
-                  ? const Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  : _error != null
-                      ? _ErrorView(error: _error!, onRetry: _fetchRekomendasi)
-                      : _rekomendasi.isEmpty
-                          ? _EmptyView(symptom: widget.symptomName)
-                          : _RekomendasiList(
-                              rekomendasi: _rekomendasi,
-                              usiaBulan: widget.usiaBulan,
-                            ),
-            ),
+              Expanded(
+                child: _loading
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : _error != null
+                        ? _ErrorView(error: _error!, onRetry: _fetchRekomendasi)
+                        : _rekomendasi.isEmpty
+                            ? _EmptyView(symptom: widget.symptomName)
+                            : _RekomendasiList(
+                                rekomendasi: _rekomendasi,
+                                usiaBulan: widget.usiaBulan,
+                              ),
+              ),
 
-            // Disclaimer
-            Container(
-              width: double.infinity,
-              color: context.vx.surface,
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Icon(Icons.info_outline_rounded,
-                      size: 16, color: context.vx.textLight),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      'Rekomendasi ini bukan pengganti konsultasi medis. Jika keluhan berlanjut, segera periksakan ke tenaga kesehatan.',
-                      style: GoogleFonts.poppins(
-                        fontSize: 11,
-                        color: context.vx.textLight,
-                        height: 1.5,
+              // Disclaimer
+              Container(
+                width: double.infinity,
+                color: context.vx.surface,
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(Icons.info_outline_rounded,
+                        size: 16, color: context.vx.textLight),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        'Rekomendasi ini bukan pengganti konsultasi medis. Jika keluhan berlanjut, segera periksakan ke tenaga kesehatan.',
+                        style: GoogleFonts.poppins(
+                          fontSize: 11,
+                          color: context.vx.textLight,
+                          height: 1.5,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -5,6 +5,7 @@ import '../models/pengingat_model.dart';
 import '../services/pengingat_service.dart';
 import '../services/notification_service.dart';
 import '../theme/app_theme.dart';
+import '../widgets/pattern_background.dart';
 
 class PengingatDetailScreen extends StatefulWidget {
   final String pengingatId;
@@ -340,8 +341,10 @@ class _PengingatDetailScreenState extends State<PengingatDetailScreen> {
       return Scaffold(
         backgroundColor: context.vx.background,
         appBar: _buildAppBar('Pengingat Obat'),
-        body: Center(
-          child: CircularProgressIndicator(color: context.vx.primary),
+        body: PatternBackground(
+          child: Center(
+            child: CircularProgressIndicator(color: context.vx.primary),
+          ),
         ),
       );
     }
@@ -351,11 +354,13 @@ class _PengingatDetailScreenState extends State<PengingatDetailScreen> {
       return Scaffold(
         backgroundColor: context.vx.background,
         appBar: _buildAppBar('Pengingat Obat'),
-        body: Center(
-          child: Text(
-            'Data pengingat tidak ditemukan.',
-            style: GoogleFonts.poppins(
-                color: context.vx.textMedium, fontSize: 14),
+        body: PatternBackground(
+          child: Center(
+            child: Text(
+              'Data pengingat tidak ditemukan.',
+              style: GoogleFonts.poppins(
+                  color: context.vx.textMedium, fontSize: 14),
+            ),
           ),
         ),
       );
@@ -368,140 +373,142 @@ class _PengingatDetailScreenState extends State<PengingatDetailScreen> {
     return Scaffold(
       backgroundColor: context.vx.background,
       appBar: _buildAppBar('Pengingat Obat'),
-      body: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // ─── Banner "Baru Minum" ─────────────────────────
-                  if (baruMinum) ...[
-                    _BannerSudahDiminum(
-                      jadwalBerikutnya: p.jadwalBerikutnya ?? '-',
-                    ),
+      body: PatternBackground(
+        child: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // ─── Banner "Baru Minum" ─────────────────────────
+                    if (baruMinum) ...[
+                      _BannerSudahDiminum(
+                        jadwalBerikutnya: p.jadwalBerikutnya ?? '-',
+                      ),
+                      const SizedBox(height: 16),
+                    ],
+
+                    // ─── Header Obat ─────────────────────────────────
+                    _ObatHeader(pengingat: p),
                     const SizedBox(height: 16),
+
+                    // ─── Info Singkat ─────────────────────────────────
+                    _InfoSingkat(pengingat: p),
+                    const SizedBox(height: 20),
+
+                    // ─── Jadwal Minum ─────────────────────────────────
+                    Text(
+                      'Jadwal Minum Obat',
+                      style: GoogleFonts.poppins(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                        color: context.vx.textDark,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    ...p.jadwalLengkap.map(
+                      (jam) => _JadwalItem(
+                        jam: jam,
+                        dosis: p.dosisAturanPakai,
+                        status: p.statusJadwal(jam),
+                      ),
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    // ─── Informasi Obat (Accordion) ───────────────────
+                    Text(
+                      'Informasi Obat',
+                      style: GoogleFonts.poppins(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                        color: context.vx.textDark,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    _AkordeonInfo(
+                      title: 'Penjelasan',
+                      icon: Icons.info_outline,
+                      content:
+                          '${p.namaObat} digunakan untuk meringankan gejala ${p.penyakitId}. Gunakan sesuai dosis yang dianjurkan.',
+                    ),
+                    _AkordeonInfo(
+                      title: 'Peringatan',
+                      icon: Icons.warning_amber_outlined,
+                      iconColor: Colors.orange,
+                      content:
+                          'Jangan melebihi dosis yang dianjurkan. Hindari penggunaan bersamaan dengan produk lain yang mengandung bahan aktif serupa.',
+                    ),
+                    _AkordeonInfo(
+                      title: 'Catatan Penggunaan',
+                      icon: Icons.notes_outlined,
+                      content:
+                          'Telan tablet dengan air putih. Gunakan sesuai aturan pakai.',
+                      isLast: true,
+                    ),
+
+                    const SizedBox(height: 8),
                   ],
+                ),
+              ),
+            ),
 
-                  // ─── Header Obat ─────────────────────────────────
-                  _ObatHeader(pengingat: p),
-                  const SizedBox(height: 16),
-
-                  // ─── Info Singkat ─────────────────────────────────
-                  _InfoSingkat(pengingat: p),
-                  const SizedBox(height: 20),
-
-                  // ─── Jadwal Minum ─────────────────────────────────
-                  Text(
-                    'Jadwal Minum Obat',
-                    style: GoogleFonts.poppins(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
-                      color: context.vx.textDark,
+            // ─── Tombol Bawah ────────────────────────────────────────
+            Container(
+              color: context.vx.surface,
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
+              child: Column(
+                children: [
+                  SizedBox(
+                    width: double.infinity,
+                    height: 52,
+                    child: ElevatedButton(
+                      onPressed: _onSudahMinum,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: context.vx.primary,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                        elevation: 0,
+                      ),
+                      child: Text(
+                        'Sudah Minum',
+                        style: GoogleFonts.poppins(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 12),
-                  ...p.jadwalLengkap.map(
-                    (jam) => _JadwalItem(
-                      jam: jam,
-                      dosis: p.dosisAturanPakai,
-                      status: p.statusJadwal(jam),
+                  const SizedBox(height: 10),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 48,
+                    child: OutlinedButton(
+                      onPressed: _onHentikan,
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: context.vx.textMedium,
+                        side: BorderSide(color: context.vx.inputBorder),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                      ),
+                      child: Text(
+                        'Hentikan Pengingat Obat',
+                        style: GoogleFonts.poppins(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: context.vx.textMedium,
+                        ),
+                      ),
                     ),
                   ),
-
-                  const SizedBox(height: 20),
-
-                  // ─── Informasi Obat (Accordion) ───────────────────
-                  Text(
-                    'Informasi Obat',
-                    style: GoogleFonts.poppins(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
-                      color: context.vx.textDark,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  _AkordeonInfo(
-                    title: 'Penjelasan',
-                    icon: Icons.info_outline,
-                    content:
-                        '${p.namaObat} digunakan untuk meringankan gejala ${p.penyakitId}. Gunakan sesuai dosis yang dianjurkan.',
-                  ),
-                  _AkordeonInfo(
-                    title: 'Peringatan',
-                    icon: Icons.warning_amber_outlined,
-                    iconColor: Colors.orange,
-                    content:
-                        'Jangan melebihi dosis yang dianjurkan. Hindari penggunaan bersamaan dengan produk lain yang mengandung bahan aktif serupa.',
-                  ),
-                  _AkordeonInfo(
-                    title: 'Catatan Penggunaan',
-                    icon: Icons.notes_outlined,
-                    content:
-                        'Telan tablet dengan air putih. Gunakan sesuai aturan pakai.',
-                    isLast: true,
-                  ),
-
-                  const SizedBox(height: 8),
                 ],
               ),
             ),
-          ),
-
-          // ─── Tombol Bawah ────────────────────────────────────────
-          Container(
-            color: context.vx.surface,
-            padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
-            child: Column(
-              children: [
-                SizedBox(
-                  width: double.infinity,
-                  height: 52,
-                  child: ElevatedButton(
-                    onPressed: _onSudahMinum,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: context.vx.primary,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
-                      elevation: 0,
-                    ),
-                    child: Text(
-                      'Sudah Minum',
-                      style: GoogleFonts.poppins(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                SizedBox(
-                  width: double.infinity,
-                  height: 48,
-                  child: OutlinedButton(
-                    onPressed: _onHentikan,
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: context.vx.textMedium,
-                      side: BorderSide(color: context.vx.inputBorder),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
-                    ),
-                    child: Text(
-                      'Hentikan Pengingat Obat',
-                      style: GoogleFonts.poppins(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: context.vx.textMedium,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

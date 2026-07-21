@@ -7,6 +7,7 @@ import '../services/notification_service.dart';
 import '../services/pengingat_service.dart';
 import '../theme/app_theme.dart';
 import 'home_screen.dart';
+import '../widgets/pattern_background.dart';
 
 class AturPengingatScreen extends StatefulWidget {
   final Map<String, dynamic> rekomendasiData;
@@ -355,222 +356,224 @@ class _AturPengingatScreenState extends State<AturPengingatScreen> {
           ),
         ),
       ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // ─── Info Obat ──────────────────────────────────
-                    Container(
-                      padding: const EdgeInsets.all(14),
-                      decoration: BoxDecoration(
-                        color: context.vx.chipTeal,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(Icons.medication_outlined,
-                              color: context.vx.primary, size: 20),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  widget.namaObat,
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                    color: context.vx.primary,
-                                  ),
-                                ),
-                                Text(
-                                  _labelFrekuensi,
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 12,
-                                        color: context.vx.primary
-                                          .withValues(alpha: (0.7 * 255).round().toDouble()),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    const SizedBox(height: 24),
-
-                    Text(
-                      'Pilih jam minum pertama',
-                      style: GoogleFonts.poppins(
-                        fontSize: 13,
-                        color: context.vx.textMedium,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'Setiap ${widget.intervalJam} jam sekali',
-                      style: GoogleFonts.poppins(
-                        fontSize: 12,
-                        color: context.vx.textLight,
-                      ),
-                    ),
-
-                    const SizedBox(height: 16),
-
-                    // ─── Display Jam ────────────────────────────────
-                    GestureDetector(
-                      onTap: _showTimePicker,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 24, vertical: 16),
+      body: PatternBackground(          // ← baris ini yang ganti
+        child: SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // ─── Info Obat ──────────────────────────────────
+                      Container(
+                        padding: const EdgeInsets.all(14),
                         decoration: BoxDecoration(
-                          color: context.vx.surface,
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                              color: context.vx.primary, width: 1.5),
+                          color: context.vx.chipTeal,
+                          borderRadius: BorderRadius.circular(12),
                         ),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            _TimeBox(
-                              value: _jamPertama
-                                  .toString()
-                                  .padLeft(2, '0'),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8),
-                              child: Text(
-                                ':',
-                                style: GoogleFonts.poppins(
-                                  fontSize: 36,
-                                  fontWeight: FontWeight.w700,
-                                  color: context.vx.textDark,
-                                ),
+                            Icon(Icons.medication_outlined,
+                                color: context.vx.primary, size: 20),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    widget.namaObat,
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                      color: context.vx.primary,
+                                    ),
+                                  ),
+                                  Text(
+                                    _labelFrekuensi,
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 12,
+                                          color: context.vx.primary
+                                            .withValues(alpha: (0.7 * 255).round().toDouble()),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                            _TimeBox(
-                              value: _menitPertama
-                                  .toString()
-                                  .padLeft(2, '0'),
                             ),
                           ],
                         ),
                       ),
-                    ),
 
-                    const SizedBox(height: 8),
-                    Center(
-                      child: TextButton.icon(
-                        onPressed: _showTimePicker,
-                        icon: Icon(Icons.edit_rounded,
-                            size: 14, color: context.vx.primary),
-                        label: Text(
-                          'Ubah waktu',
-                          style: GoogleFonts.poppins(
-                            fontSize: 12,
-                            color: context.vx.primary,
+                      const SizedBox(height: 24),
+
+                      Text(
+                        'Pilih jam minum pertama',
+                        style: GoogleFonts.poppins(
+                          fontSize: 13,
+                          color: context.vx.textMedium,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Setiap ${widget.intervalJam} jam sekali',
+                        style: GoogleFonts.poppins(
+                          fontSize: 12,
+                          color: context.vx.textLight,
+                        ),
+                      ),
+
+                      const SizedBox(height: 16),
+
+                      // ─── Display Jam ────────────────────────────────
+                      GestureDetector(
+                        onTap: _showTimePicker,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 24, vertical: 16),
+                          decoration: BoxDecoration(
+                            color: context.vx.surface,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                                color: context.vx.primary, width: 1.5),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              _TimeBox(
+                                value: _jamPertama
+                                    .toString()
+                                    .padLeft(2, '0'),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8),
+                                child: Text(
+                                  ':',
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 36,
+                                    fontWeight: FontWeight.w700,
+                                    color: context.vx.textDark,
+                                  ),
+                                ),
+                              ),
+                              _TimeBox(
+                                value: _menitPertama
+                                    .toString()
+                                    .padLeft(2, '0'),
+                              ),
+                            ],
                           ),
                         ),
                       ),
-                    ),
 
-                    const SizedBox(height: 24),
-
-                    // ─── Jadwal Otomatis ────────────────────────────
-                    Text(
-                      'Waktu minum berikutnya (otomatis)',
-                      style: GoogleFonts.poppins(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color: context.vx.textDark,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-
-                    ...jadwal.map(
-                      (j) => _JadwalItem(
-                        urutan: j['urutan'] as int,
-                        waktu: _formatWaktu(
-                            j['jam'] as int, j['menit'] as int),
-                        tambahJam: j['tambahJam'] as String?,
-                      ),
-                    ),
-
-                    const SizedBox(height: 12),
-
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: context.vx.chipTeal,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(Icons.loop_rounded,
-                              size: 16, color: context.vx.primary),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Text(
-                              'Pengingat akan berulang setiap hari sesuai jadwal di atas.',
-                              style: GoogleFonts.poppins(
-                                fontSize: 11,
-                                color: context.vx.primary,
-                                height: 1.4,
-                              ),
+                      const SizedBox(height: 8),
+                      Center(
+                        child: TextButton.icon(
+                          onPressed: _showTimePicker,
+                          icon: Icon(Icons.edit_rounded,
+                              size: 14, color: context.vx.primary),
+                          label: Text(
+                            'Ubah waktu',
+                            style: GoogleFonts.poppins(
+                              fontSize: 12,
+                              color: context.vx.primary,
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            // ─── Tombol Simpan ────────────────────────────────────
-            Container(
-              padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
-              color: context.vx.surface,
-              child: SizedBox(
-                width: double.infinity,
-                height: 52,
-                child: ElevatedButton(
-                  onPressed: _simpanLoading ? null : _simpanPengingat,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: context.vx.primary,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    elevation: 0,
-                  ),
-                  child: _simpanLoading
-                      ? const SizedBox(
-                          width: 22,
-                          height: 22,
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                            strokeWidth: 2.5,
-                          ),
-                        )
-                      : Text(
-                          'Simpan Pengingat',
-                          style: GoogleFonts.poppins(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
                         ),
+                      ),
+
+                      const SizedBox(height: 24),
+
+                      // ─── Jadwal Otomatis ────────────────────────────
+                      Text(
+                        'Waktu minum berikutnya (otomatis)',
+                        style: GoogleFonts.poppins(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: context.vx.textDark,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+
+                      ...jadwal.map(
+                        (j) => _JadwalItem(
+                          urutan: j['urutan'] as int,
+                          waktu: _formatWaktu(
+                              j['jam'] as int, j['menit'] as int),
+                          tambahJam: j['tambahJam'] as String?,
+                        ),
+                      ),
+
+                      const SizedBox(height: 12),
+
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: context.vx.chipTeal,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(Icons.loop_rounded,
+                                size: 16, color: context.vx.primary),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                'Pengingat akan berulang setiap hari sesuai jadwal di atas.',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 11,
+                                  color: context.vx.primary,
+                                  height: 1.4,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+
+              // ─── Tombol Simpan ────────────────────────────────────
+              Container(
+                padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+                color: context.vx.surface,
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 52,
+                  child: ElevatedButton(
+                    onPressed: _simpanLoading ? null : _simpanPengingat,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: context.vx.primary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      elevation: 0,
+                    ),
+                    child: _simpanLoading
+                        ? const SizedBox(
+                            width: 22,
+                            height: 22,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2.5,
+                            ),
+                          )
+                        : Text(
+                            'Simpan Pengingat',
+                            style: GoogleFonts.poppins(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

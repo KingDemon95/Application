@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_theme.dart';
 import 'hasil_rekomendasi_screen.dart';
+import '../widgets/pattern_background.dart';
 
 class AgeScreen extends StatefulWidget {
   final String symptomId;
@@ -70,199 +71,201 @@ class _AgeScreenState extends State<AgeScreen> {
           ),
         ),
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            children: [
-              // ─── Konten yang di-center di sisa ruang ─────────────
-              Expanded(
-                child: Center(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Berapa usia kamu?',
-                          style: GoogleFonts.poppins(
-                            fontSize: 30,
-                            fontWeight: FontWeight.w700,
-                            color: context.vx.textDark,
+      body: PatternBackground(          // ← baris ini yang ganti
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              children: [
+                // ─── Konten yang di-center di sisa ruang ─────────────
+                Expanded(
+                  child: Center(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Berapa usia kamu?',
+                            style: GoogleFonts.poppins(
+                              fontSize: 30,
+                              fontWeight: FontWeight.w700,
+                              color: context.vx.textDark,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 6),
-                        Text(
-                          'Pilih usia dalam bulan untuk\nhasil yang lebih tepat.',
-                          style: GoogleFonts.poppins(
-                            fontSize: 16,
-                            color: context.vx.textMedium,
-                            height: 1.5,
+                          const SizedBox(height: 6),
+                          Text(
+                            'Pilih usia dalam bulan untuk\nhasil yang lebih tepat.',
+                            style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              color: context.vx.textMedium,
+                              height: 1.5,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 28),
+                          const SizedBox(height: 28),
 
-                        // Ilustrasi ikon usia
-                        Container(
-                          width: 200,
-                          height: 200,
-                          decoration: BoxDecoration(
-                            color: context.vx.chipTeal,
-                            shape: BoxShape.circle,
+                          // Ilustrasi ikon usia
+                          Container(
+                            width: 200,
+                            height: 200,
+                            decoration: BoxDecoration(
+                              color: context.vx.chipTeal,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              _ikonUsia,
+                              size: 150,
+                              color: context.vx.primary,
+                            ),
                           ),
-                          child: Icon(
-                            _ikonUsia,
-                            size: 150,
-                            color: context.vx.primary,
-                          ),
-                        ),
 
-                        const SizedBox(height: 8),
-                        Text(
-                          _kategoriUsia,
-                          style: GoogleFonts.poppins(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500,
-                            color: context.vx.primary,
+                          const SizedBox(height: 8),
+                          Text(
+                            _kategoriUsia,
+                            style: GoogleFonts.poppins(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                              color: context.vx.primary,
+                            ),
                           ),
-                        ),
 
-                        const SizedBox(height: 32),
+                          const SizedBox(height: 32),
 
-                        // Angka usia besar
-                        Text(
-                          _labelUsia,
-                          style: GoogleFonts.poppins(
-                            fontSize: 36,
-                            fontWeight: FontWeight.w700,
-                            color: context.vx.textDark,
+                          // Angka usia besar
+                          Text(
+                            _labelUsia,
+                            style: GoogleFonts.poppins(
+                              fontSize: 36,
+                              fontWeight: FontWeight.w700,
+                              color: context.vx.textDark,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          '${_usiaBulan.round()} bulan',
-                          style: GoogleFonts.poppins(
-                            fontSize: 14,
-                            color: context.vx.textMedium,
+                          const SizedBox(height: 4),
+                          Text(
+                            '${_usiaBulan.round()} bulan',
+                            style: GoogleFonts.poppins(
+                              fontSize: 14,
+                              color: context.vx.textMedium,
+                            ),
                           ),
-                        ),
 
-                        const SizedBox(height: 20),
+                          const SizedBox(height: 20),
 
-                        // Slider
-                        SliderTheme(
-                          data: SliderTheme.of(context).copyWith(
-                            activeTrackColor: context.vx.primary,
-                            inactiveTrackColor: context.vx.inputBorder,
-                            thumbColor: context.vx.primary,
-                            overlayColor:
-                                context.vx.primary.withValues(alpha: 0.12),
-                            thumbShape: const RoundSliderThumbShape(
-                                enabledThumbRadius: 12),
-                            trackHeight: 6,
+                          // Slider
+                          SliderTheme(
+                            data: SliderTheme.of(context).copyWith(
+                              activeTrackColor: context.vx.primary,
+                              inactiveTrackColor: context.vx.inputBorder,
+                              thumbColor: context.vx.primary,
+                              overlayColor:
+                                  context.vx.primary.withValues(alpha: 0.12),
+                              thumbShape: const RoundSliderThumbShape(
+                                  enabledThumbRadius: 12),
+                              trackHeight: 6,
+                            ),
+                            child: Slider(
+                              value: _usiaBulan,
+                              min: 0,
+                              max: 1200,
+                              divisions: 1200,
+                              onChanged: (val) =>
+                                  setState(() => _usiaBulan = val),
+                            ),
                           ),
-                          child: Slider(
-                            value: _usiaBulan,
-                            min: 0,
-                            max: 1200,
-                            divisions: 1200,
-                            onChanged: (val) =>
-                                setState(() => _usiaBulan = val),
-                          ),
-                        ),
 
-                        // Label min max slider
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('0',
-                                  style: GoogleFonts.poppins(
-                                      fontSize: 11,
-                                      color: context.vx.textLight)),
-                              Text('300',
-                                  style: GoogleFonts.poppins(
-                                      fontSize: 11,
-                                      color: context.vx.textLight)),
-                              Text('600',
-                                  style: GoogleFonts.poppins(
-                                      fontSize: 11,
-                                      color: context.vx.textLight)),
-                              Text('900',
-                                  style: GoogleFonts.poppins(
-                                      fontSize: 11,
-                                      color: context.vx.textLight)),
-                              Text('1200',
-                                  style: GoogleFonts.poppins(
-                                      fontSize: 11,
-                                      color: context.vx.textLight)),
-                            ],
+                          // Label min max slider
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 4),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('0',
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 11,
+                                        color: context.vx.textLight)),
+                                Text('300',
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 11,
+                                        color: context.vx.textLight)),
+                                Text('600',
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 11,
+                                        color: context.vx.textLight)),
+                                Text('900',
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 11,
+                                        color: context.vx.textLight)),
+                                Text('1200',
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 11,
+                                        color: context.vx.textLight)),
+                              ],
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('bayi',
-                                  style: GoogleFonts.poppins(
-                                      fontSize: 10,
-                                      color: context.vx.textLight)),
-                              const Spacer(),
-                              Text('100 thn',
-                                  style: GoogleFonts.poppins(
-                                      fontSize: 10,
-                                      color: context.vx.textLight)),
-                            ],
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 4),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('bayi',
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 10,
+                                        color: context.vx.textLight)),
+                                const Spacer(),
+                                Text('100 thn',
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 10,
+                                        color: context.vx.textLight)),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-
-              // ─── Tombol lanjutkan (pin di bawah) ──────────────────
-              Padding(
-                padding: const EdgeInsets.only(bottom: 24),
-                child: SizedBox(
-                  width: double.infinity,
-                  height: 52,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => HasilRekomendasiScreen(
-                            symptomId: widget.symptomId,
-                            symptomName: widget.symptomName,
-                            usiaBulan: _usiaBulan.round(),
-                          ),
-                        ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: context.vx.primary,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: Text(
-                      'Lanjutkan',
-                      style: GoogleFonts.poppins(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
+                        ],
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
+
+                // ─── Tombol lanjutkan (pin di bawah) ──────────────────
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 24),
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: 52,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => HasilRekomendasiScreen(
+                              symptomId: widget.symptomId,
+                              symptomName: widget.symptomName,
+                              usiaBulan: _usiaBulan.round(),
+                            ),
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: context.vx.primary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: Text(
+                        'Lanjutkan',
+                        style: GoogleFonts.poppins(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

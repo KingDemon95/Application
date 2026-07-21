@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../theme/app_theme.dart';
 import 'atur_pengingat_screen.dart';
+import '../widgets/pattern_background.dart';
 
 class DetailObatScreen extends StatefulWidget {
   final Map<String, dynamic> rekomendasiData;
@@ -108,219 +109,224 @@ class _DetailObatScreenState extends State<DetailObatScreen> {
           ),
         ),
       ),
-      body: _loading
-          ? const Center(child: CircularProgressIndicator())
-          : SafeArea(
-              child: Column(
-                children: [
-                  Expanded(
-                    child: SingleChildScrollView(
-                      padding: const EdgeInsets.all(20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // ─── Header obat ───────────────────────────
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(20),
-                            decoration: BoxDecoration(
-                              color: context.vx.surface,
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(color: context.vx.cardBorder),
-                            ),
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: 64,
-                                  height: 64,
-                                  decoration: BoxDecoration(
-                                    color: context.vx.chipTeal,
-                                    borderRadius: BorderRadius.circular(14),
-                                  ),
-                                  child: logoAsset != null
-                                      ? Padding(
-                                          padding: const EdgeInsets.all(12),
-                                          child: Image.asset(
-                                            logoAsset,
-                                            fit: BoxFit.contain,
+      body: PatternBackground(
+        child: _loading
+            ? const Center(child: CircularProgressIndicator())
+            : SafeArea(
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.all(20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // ─── Header obat ───────────────────────────
+                            Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(20),
+                              decoration: BoxDecoration(
+                                color: context.vx.surface,
+                                borderRadius: BorderRadius.circular(16),
+                                border:
+                                    Border.all(color: context.vx.cardBorder),
+                              ),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 64,
+                                    height: 64,
+                                    decoration: BoxDecoration(
+                                      color: context.vx.chipTeal,
+                                      borderRadius: BorderRadius.circular(14),
+                                    ),
+                                    child: logoAsset != null
+                                        ? Padding(
+                                            padding: const EdgeInsets.all(12),
+                                            child: Image.asset(
+                                              logoAsset,
+                                              fit: BoxFit.contain,
+                                            ),
+                                          )
+                                        : Icon(
+                                            Icons.medication_outlined,
+                                            color: context.vx.primary,
+                                            size: 34,
                                           ),
-                                        )
-                                      : Icon(
-                                          Icons.medication_outlined,
-                                          color: context.vx.primary,
-                                          size: 34,
-                                        ),
-                                ),
-                                const SizedBox(width: 16),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        namaObat,
-                                        style: GoogleFonts.poppins(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w700,
-                                          color: context.vx.textDark,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        _labelJenis,
-                                        style: GoogleFonts.poppins(
-                                          fontSize: 13,
-                                          color: context.vx.textMedium,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        'Untuk usia $rentangUsia',
-                                        style: GoogleFonts.poppins(
-                                          fontSize: 12,
-                                          color: context.vx.primary,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
                                   ),
-                                ),
-                              ],
+                                  const SizedBox(width: 16),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          namaObat,
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w700,
+                                            color: context.vx.textDark,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          _labelJenis,
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 13,
+                                            color: context.vx.textMedium,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          'Untuk usia $rentangUsia',
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 12,
+                                            color: context.vx.primary,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
 
-                          const SizedBox(height: 24),
+                            const SizedBox(height: 24),
 
-                          // ─── INFORMASI PENGGUNAAN ──────────────────
-                          _SectionHeader(
-                            icon: Icons.info_rounded,
-                            title: 'Informasi Penggunaan',
-                            color: context.vx.primary,
-                          ),
-                          const SizedBox(height: 12),
-                          _InfoTile(
-                            icon: Icons.calculate_outlined,
-                            title: 'Dosis sesuai perhitungan',
-                            desc: dosisAturan,
-                            color: context.vx.primary,
-                            bgColor: context.vx.chipTeal,
-                          ),
-                          const SizedBox(height: 10),
-                          _InfoTile(
-                            icon: Icons.schedule_rounded,
-                            title: 'Aturan konsumsi obat',
-                            desc:
-                                'Dikonsumsi ${frekuensi}x sehari, setiap $intervalJam jam sekali.',
-                            color: context.vx.primary,
-                            bgColor: context.vx.chipTeal,
-                          ),
-
-                          const SizedBox(height: 24),
-
-                          // ─── PERHATIAN ──────────────────────────────
-                          _SectionHeader(
-                            icon: Icons.error_rounded,
-                            title: 'Perhatian',
-                            color: const Color(0xFFE0942F),
-                          ),
-                          const SizedBox(height: 12),
-                          _InfoTile(
-                            icon: Icons.favorite_border_rounded,
-                            title: 'Kondisi kesehatan tertentu',
-                            desc: infoPenyakit == '-'
-                                ? 'Tidak ada kondisi khusus yang teridentifikasi.'
-                                : infoPenyakit,
-                            color: const Color(0xFFE0942F),
-                            bgColor: const Color(0xFFFDF1DD),
-                          ),
-                          const SizedBox(height: 10),
-                          _InfoTile(
-                            icon: Icons.info_outline_rounded,
-                            title: 'Kewaspadaan',
-                            desc:
-                                'Simpan dengan kondisi kering dan sejuk, jauhkan dari jangkauan anak kecil.',
-                            color: const Color(0xFFE0942F),
-                            bgColor: const Color(0xFFFDF1DD),
-                          ),
-
-                          const SizedBox(height: 24),
-
-                          // ─── PERINGATAN PENTING ─────────────────────
-                          _SectionHeader(
-                            icon: Icons.warning_rounded,
-                            title: 'Peringatan Penting',
-                            color: const Color(0xFFE05B4F),
-                          ),
-                          const SizedBox(height: 12),
-                          _InfoTile(
-                            icon: Icons.warning_amber_rounded,
-                            title: 'Alergi',
-                            desc: infoAlergi == '-'
-                                ? 'Tidak ada info alergi obat yang terdeteksi.'
-                                : 'Jangan gunakan obat ini apabila Anda memiliki alergi terhadap $infoAlergi.',
-                            color: const Color(0xFFE05B4F),
-                            bgColor: const Color(0xFFFCE6E4),
-                          ),
-                          if (infoHamil.isNotEmpty && infoHamil != '-') ...[
+                            // ─── INFORMASI PENGGUNAAN ──────────────────
+                            _SectionHeader(
+                              icon: Icons.info_rounded,
+                              title: 'Informasi Penggunaan',
+                              color: context.vx.primary,
+                            ),
+                            const SizedBox(height: 12),
+                            _InfoTile(
+                              icon: Icons.calculate_outlined,
+                              title: 'Dosis sesuai perhitungan',
+                              desc: dosisAturan,
+                              color: context.vx.primary,
+                              bgColor: context.vx.chipTeal,
+                            ),
                             const SizedBox(height: 10),
                             _InfoTile(
-                              icon: Icons.pregnant_woman_rounded,
-                              title: 'Ibu hamil & menyusui',
+                              icon: Icons.schedule_rounded,
+                              title: 'Aturan konsumsi obat',
                               desc:
-                                  'Hamil: $infoHamil. Menyusui: $infoMenyusui',
+                                  'Dikonsumsi ${frekuensi}x sehari, setiap $intervalJam jam sekali.',
+                              color: context.vx.primary,
+                              bgColor: context.vx.chipTeal,
+                            ),
+
+                            const SizedBox(height: 24),
+
+                            // ─── PERHATIAN ──────────────────────────────
+                            _SectionHeader(
+                              icon: Icons.error_rounded,
+                              title: 'Perhatian',
+                              color: const Color(0xFFE0942F),
+                            ),
+                            const SizedBox(height: 12),
+                            _InfoTile(
+                              icon: Icons.favorite_border_rounded,
+                              title: 'Kondisi kesehatan tertentu',
+                              desc: infoPenyakit == '-'
+                                  ? 'Tidak ada kondisi khusus yang teridentifikasi.'
+                                  : infoPenyakit,
+                              color: const Color(0xFFE0942F),
+                              bgColor: const Color(0xFFFDF1DD),
+                            ),
+                            const SizedBox(height: 10),
+                            _InfoTile(
+                              icon: Icons.info_outline_rounded,
+                              title: 'Kewaspadaan',
+                              desc:
+                                  'Simpan dengan kondisi kering dan sejuk, jauhkan dari jangkauan anak kecil.',
+                              color: const Color(0xFFE0942F),
+                              bgColor: const Color(0xFFFDF1DD),
+                            ),
+
+                            const SizedBox(height: 24),
+
+                            // ─── PERINGATAN PENTING ─────────────────────
+                            _SectionHeader(
+                              icon: Icons.warning_rounded,
+                              title: 'Peringatan Penting',
+                              color: const Color(0xFFE05B4F),
+                            ),
+                            const SizedBox(height: 12),
+                            _InfoTile(
+                              icon: Icons.warning_amber_rounded,
+                              title: 'Alergi',
+                              desc: infoAlergi == '-'
+                                  ? 'Tidak ada info alergi obat yang terdeteksi.'
+                                  : 'Jangan gunakan obat ini apabila Anda memiliki alergi terhadap $infoAlergi.',
                               color: const Color(0xFFE05B4F),
                               bgColor: const Color(0xFFFCE6E4),
                             ),
+                            if (infoHamil.isNotEmpty &&
+                                infoHamil != '-') ...[
+                              const SizedBox(height: 10),
+                              _InfoTile(
+                                icon: Icons.pregnant_woman_rounded,
+                                title: 'Ibu hamil & menyusui',
+                                desc:
+                                    'Hamil: $infoHamil. Menyusui: $infoMenyusui',
+                                color: const Color(0xFFE05B4F),
+                                bgColor: const Color(0xFFFCE6E4),
+                              ),
+                            ],
                           ],
-                        ],
+                        ),
                       ),
                     ),
-                  ),
 
-                  // Tombol atur pengingat
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
-                    color: context.vx.surface,
-                    child: SizedBox(
-                      width: double.infinity,
-                      height: 52,
-                      child: ElevatedButton.icon(
-                        onPressed: bisaReminder
-                            ? () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (_) => AturPengingatScreen(
-                                      rekomendasiData: widget.rekomendasiData,
-                                      namaObat: namaObat,
-                                      frekuensiPerHari: frekuensi,
-                                      intervalJam: intervalJam,
+                    // Tombol atur pengingat
+                    Container(
+                      padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+                      color: context.vx.surface,
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: 52,
+                        child: ElevatedButton.icon(
+                          onPressed: bisaReminder
+                              ? () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => AturPengingatScreen(
+                                        rekomendasiData:
+                                            widget.rekomendasiData,
+                                        namaObat: namaObat,
+                                        frekuensiPerHari: frekuensi,
+                                        intervalJam: intervalJam,
+                                      ),
                                     ),
-                                  ),
-                                );
-                              }
-                            : null,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: context.vx.primary,
-                          disabledBackgroundColor: context.vx.inputBorder,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                                  );
+                                }
+                              : null,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: context.vx.primary,
+                            disabledBackgroundColor: context.vx.inputBorder,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                           ),
-                        ),
-                        label: Text(
-                          'Atur Pengingat Obat',
-                          style: GoogleFonts.poppins(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
+                          label: Text(
+                            'Atur Pengingat Obat',
+                            style: GoogleFonts.poppins(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
+      ),
     );
   }
 }

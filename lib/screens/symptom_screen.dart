@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_theme.dart';
 import 'age_screen.dart';
+import '../widgets/pattern_background.dart';
 
 class SymptomScreen extends StatefulWidget {
   const SymptomScreen({super.key});
@@ -147,117 +148,119 @@ class _SymptomScreenState extends State<SymptomScreen> {
         ),
       ),
 
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 16),
+      body: PatternBackground(          // ← baris ini yang ganti
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 16),
 
-              // ─── Maskot dokter + speech bubble ─────────────────────
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  // Lebar dilebarin supaya height 275 beneran terpakai penuh,
-                  // sebelumnya width 150 terlalu sempit jadi gambar
-                  // disusutkan lagi oleh BoxFit.contain (kena batas lebar
-                  // duluan sebelum tingginya sempat mencapai 275).
-                  SizedBox(
-                    width: 200,
-                    height: 275,
-                    child: Image.asset(
-                      'assets/images/doctor1.png',
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: _SpeechBubble(colors: colors),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 20),
-
-              // ─── Grid Gejala (meregang ngisi sisa ruang) ───────────
-              Expanded(
-                child: Column(
+                // ─── Maskot dokter + speech bubble ─────────────────────
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Expanded(
-                      child: Row(
-                        children: [
-                          Expanded(child: _buildCard(_symptoms[0], colors)),
-                          const SizedBox(width: 14),
-                          Expanded(child: _buildCard(_symptoms[1], colors)),
-                        ],
+                    // Lebar dilebarin supaya height 275 beneran terpakai penuh,
+                    // sebelumnya width 150 terlalu sempit jadi gambar
+                    // disusutkan lagi oleh BoxFit.contain (kena batas lebar
+                    // duluan sebelum tingginya sempat mencapai 275).
+                    SizedBox(
+                      width: 200,
+                      height: 275,
+                      child: Image.asset(
+                        'assets/images/doctor1.png',
+                        fit: BoxFit.contain,
                       ),
                     ),
-                    const SizedBox(height: 14),
+                    const SizedBox(width: 8),
                     Expanded(
-                      child: Row(
-                        children: [
-                          Expanded(child: _buildCard(_symptoms[2], colors)),
-                          const SizedBox(width: 14),
-                          Expanded(child: _buildCard(_symptoms[3], colors)),
-                        ],
-                      ),
+                      child: _SpeechBubble(colors: colors),
                     ),
                   ],
                 ),
-              ),
 
-              const SizedBox(height: 16),
+                const SizedBox(height: 20),
 
-              // ─── Lanjut Button ────────────────────────────────────
-              SizedBox(
-                width: double.infinity,
-                height: 52,
-                child: ElevatedButton(
-                  onPressed: _selected == null
-                      ? null
-                      : () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => AgeScreen(
-                                symptomId: _selected!,
-                                symptomName: _symptoms
-                                    .firstWhere(
-                                      (s) => s['id'] == _selected,
-                                    )['name'] as String,
-                              ),
-                            ),
-                          );
-                        },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: colors.primary,
-
-                    // Saat tombol belum bisa diklik.
-                    disabledBackgroundColor: colors.inputBorder,
-                    disabledForegroundColor: colors.textLight,
-
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+                // ─── Grid Gejala (meregang ngisi sisa ruang) ───────────
+                Expanded(
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: Row(
+                          children: [
+                            Expanded(child: _buildCard(_symptoms[0], colors)),
+                            const SizedBox(width: 14),
+                            Expanded(child: _buildCard(_symptoms[1], colors)),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 14),
+                      Expanded(
+                        child: Row(
+                          children: [
+                            Expanded(child: _buildCard(_symptoms[2], colors)),
+                            const SizedBox(width: 14),
+                            Expanded(child: _buildCard(_symptoms[3], colors)),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                  child: Text(
-                    'Lanjutkan',
-                    style: GoogleFonts.poppins(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
+                ),
 
-                      // Ini sengaja TETAP Colors.white.
-                      // Jangan ganti menjadi colors.white karena di dark mode
-                      // colors.white isinya surface gelap.
-                      color: Colors.white,
+                const SizedBox(height: 16),
+
+                // ─── Lanjut Button ────────────────────────────────────
+                SizedBox(
+                  width: double.infinity,
+                  height: 52,
+                  child: ElevatedButton(
+                    onPressed: _selected == null
+                        ? null
+                        : () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => AgeScreen(
+                                  symptomId: _selected!,
+                                  symptomName: _symptoms
+                                      .firstWhere(
+                                        (s) => s['id'] == _selected,
+                                      )['name'] as String,
+                                ),
+                              ),
+                            );
+                          },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: colors.primary,
+
+                      // Saat tombol belum bisa diklik.
+                      disabledBackgroundColor: colors.inputBorder,
+                      disabledForegroundColor: colors.textLight,
+
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: Text(
+                      'Lanjutkan',
+                      style: GoogleFonts.poppins(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+
+                        // Ini sengaja TETAP Colors.white.
+                        // Jangan ganti menjadi colors.white karena di dark mode
+                        // colors.white isinya surface gelap.
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),
-              ),
 
-              const SizedBox(height: 24),
-            ],
+                const SizedBox(height: 24),
+              ],
+            ),
           ),
         ),
       ),

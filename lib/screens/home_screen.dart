@@ -8,7 +8,8 @@ import '../services/notification_service.dart';
 import '../main.dart'; // untuk themeProvider
 import 'login_screen.dart';
 import 'symptom_screen.dart';
-import 'pengingat_list_screen.dart'; // TODO: pastikan file ini ada, lihat catatan di bawah
+import 'pengingat_list_screen.dart';
+import '../widgets/pattern_background.dart'; // TODO: pastikan file ini ada, lihat catatan di bawah
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -123,209 +124,211 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       backgroundColor: vx.background,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 12),
+        body: PatternBackground(          // ← baris ini yang ganti
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 12),
 
-              // ─── Top Bar ─────────────────────────
-              Container(
-                width: double.infinity,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-                decoration: BoxDecoration(
-                  color: vx.primary,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _HeaderIconButton(
-                      icon: Icons.notifications_active_rounded,
-                      tooltip: 'Pengingat Obat',
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => const PengingatListScreen()),
-                        );
-                      },
-                      iconColor: vx.primary,
-                    ),
-                    Row(
-                      children: [
-                        _HeaderIconButton(
-                          icon: context.isDark
-                              ? Icons.light_mode_rounded
-                              : Icons.dark_mode_rounded,
-                          tooltip:
-                              context.isDark ? 'Mode Terang' : 'Mode Gelap',
-                          onTap: () => themeProvider.toggle(),
-                          iconColor: vx.primary,
-                        ),
-                        const SizedBox(width: 10),
-                        _HeaderIconButton(
-                          icon: Icons.logout_rounded,
-                          tooltip: 'Logout',
-                          onTap: _logout,
-                          iconColor: vx.primary,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
-              // ─── Greeting ────────────────────────────────────────
-              Text(
-                'Halo, $_firstName $_greetingEmoji',
-                style: GoogleFonts.poppins(
-                  fontSize: 13,
-                  color: vx.textMedium,
-                ),
-              ),
-              Text(
-                _greeting,
-                style: GoogleFonts.poppins(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                  color: vx.textDark,
-                ),
-              ),
-              Text(
-                'Kesehatanmu, prioritas kami.',
-                style: GoogleFonts.poppins(
-                  fontSize: 12,
-                  color: vx.textLight,
-                ),
-              ),
-
-              // ─── Ilustrasi Dokter ────────────────────────────────
-              Expanded(
-                child: Stack(
-                  children: [
-                    // Karakter dokter
-                    Center(
-                      child: Image.asset(
-                        'assets/images/doctor.png',
-                        height: 400,
-                        fit: BoxFit.contain,
+                // ─── Top Bar ─────────────────────────
+                Container(
+                  width: double.infinity,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+                  decoration: BoxDecoration(
+                    color: vx.primary,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _HeaderIconButton(
+                        icon: Icons.notifications_active_rounded,
+                        tooltip: 'Pengingat Obat',
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => const PengingatListScreen()),
+                          );
+                        },
+                        iconColor: vx.primary,
                       ),
-                    ),
-                  ],
-                ),
-              ),
-
-              // ─── Card Cek Gejala ─────────────────────────────────
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: vx.primary,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      Row(
                         children: [
-                          Text(
-                            'Bagaimana perasaanmu\nhari ini?',
-                            style: GoogleFonts.poppins(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                              height: 1.4,
-                            ),
+                          _HeaderIconButton(
+                            icon: context.isDark
+                                ? Icons.light_mode_rounded
+                                : Icons.dark_mode_rounded,
+                            tooltip:
+                                context.isDark ? 'Mode Terang' : 'Mode Gelap',
+                            onTap: () => themeProvider.toggle(),
+                            iconColor: vx.primary,
                           ),
-                          const SizedBox(height: 6),
-                          Text(
-                            'Mulai cek gejala untuk\nmendapatkan rekomendasi.',
-                            style: GoogleFonts.poppins(
-                              fontSize: 12,
-                              color: Colors.white.withValues(alpha: 0.8),
-                              height: 1.4,
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          GestureDetector(
-                            onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) => const SymptomScreen()),
-                            ),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 10),
-                              decoration: BoxDecoration(
-                                color: context.isDark
-                                    ? DarkColors.surface
-                                    : Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Text(
-                                'Mulai Cek Gejala',
-                                style: GoogleFonts.poppins(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600,
-                                  color: vx.primary,
-                                ),
-                              ),
-                            ),
+                          const SizedBox(width: 10),
+                          _HeaderIconButton(
+                            icon: Icons.logout_rounded,
+                            tooltip: 'Logout',
+                            onTap: _logout,
+                            iconColor: vx.primary,
                           ),
                         ],
                       ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                // ─── Greeting ────────────────────────────────────────
+                Text(
+                  'Halo, $_firstName $_greetingEmoji',
+                  style: GoogleFonts.poppins(
+                    fontSize: 13,
+                    color: vx.textMedium,
+                  ),
+                ),
+                Text(
+                  _greeting,
+                  style: GoogleFonts.poppins(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    color: vx.textDark,
+                  ),
+                ),
+                Text(
+                  'Kesehatanmu, prioritas kami.',
+                  style: GoogleFonts.poppins(
+                    fontSize: 12,
+                    color: vx.textLight,
+                  ),
+                ),
+
+                // ─── Ilustrasi Dokter ────────────────────────────────
+                Expanded(
+                  child: Stack(
+                    children: [
+                      // Karakter dokter
+                      Center(
+                        child: Image.asset(
+                          'assets/images/doctor.png',
+                          height: 400,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // ─── Card Cek Gejala ─────────────────────────────────
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: vx.primary,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Bagaimana perasaanmu\nhari ini?',
+                              style: GoogleFonts.poppins(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                                height: 1.4,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              'Mulai cek gejala untuk\nmendapatkan rekomendasi.',
+                              style: GoogleFonts.poppins(
+                                fontSize: 12,
+                                color: Colors.white.withValues(alpha: 0.8),
+                                height: 1.4,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            GestureDetector(
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => const SymptomScreen()),
+                              ),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 10),
+                                decoration: BoxDecoration(
+                                  color: context.isDark
+                                      ? DarkColors.surface
+                                      : Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Text(
+                                  'Mulai Cek Gejala',
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                    color: vx.primary,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Container(
+                        width: 48,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Icon(Icons.search_rounded,
+                            color: Colors.white, size: 26),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+
+                // ─── Tombol Keluar Aplikasi ──────────────────────────
+                SizedBox(
+                  width: double.infinity,
+                  height: 52,
+                  child: OutlinedButton.icon(
+                    onPressed: _exitApp,
+                    icon: Icon(Icons.exit_to_app_rounded,
+                        size: 20, color: vx.primary),
+                    label: Text(
+                      'Keluar Aplikasi',
+                      style: GoogleFonts.poppins(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: vx.primary,
+                      ),
                     ),
-                    const SizedBox(width: 12),
-                    Container(
-                      width: 48,
-                      height: 48,
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(color: vx.primary, width: 1.5),
+                      shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: const Icon(Icons.search_rounded,
-                          color: Colors.white, size: 26),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 16),
-
-              // ─── Tombol Keluar Aplikasi ──────────────────────────
-              SizedBox(
-                width: double.infinity,
-                height: 52,
-                child: OutlinedButton.icon(
-                  onPressed: _exitApp,
-                  icon: Icon(Icons.exit_to_app_rounded,
-                      size: 20, color: vx.primary),
-                  label: Text(
-                    'Keluar Aplikasi',
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: vx.primary,
-                    ),
-                  ),
-                  style: OutlinedButton.styleFrom(
-                    side: BorderSide(color: vx.primary, width: 1.5),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
                     ),
                   ),
                 ),
-              ),
 
-              const SizedBox(height: 24),
-            ],
+                const SizedBox(height: 24),
+              ],
+            ),
           ),
         ),
       ),

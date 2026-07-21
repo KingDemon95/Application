@@ -4,6 +4,7 @@ import '../models/pengingat_model.dart';
 import '../services/pengingat_service.dart';
 import '../theme/app_theme.dart';
 import 'pengingat_detail_screen.dart';
+import '../widgets/pattern_background.dart';
 
 class PengingatListScreen extends StatelessWidget {
   const PengingatListScreen({super.key});
@@ -30,43 +31,45 @@ class PengingatListScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: StreamBuilder<List<PengingatModel>>(
-        stream: service.streamPengingatAktif(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(color: context.vx.primary),
-            );
-          }
-
-          if (snapshot.hasError) {
-            return Center(
-              child: Text(
-                'Gagal memuat data pengingat.',
-                style: GoogleFonts.poppins(
-                    fontSize: 14, color: context.vx.textMedium),
-              ),
-            );
-          }
-
-          final list = snapshot.data ?? [];
-
-          if (list.isEmpty) {
-            return const _EmptyState();
-          }
-
-          return ListView.builder(
-            padding: const EdgeInsets.all(20),
-            itemCount: list.length,
-            itemBuilder: (context, index) {
-              final p = list[index];
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: _PengingatCard(pengingat: p),
+      body: PatternBackground(
+        child: StreamBuilder<List<PengingatModel>>(
+          stream: service.streamPengingatAktif(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(color: context.vx.primary),
               );
-            },
-          );
-        },
+            }
+
+            if (snapshot.hasError) {
+              return Center(
+                child: Text(
+                  'Gagal memuat data pengingat.',
+                  style: GoogleFonts.poppins(
+                      fontSize: 14, color: context.vx.textMedium),
+                ),
+              );
+            }
+
+            final list = snapshot.data ?? [];
+
+            if (list.isEmpty) {
+              return const _EmptyState();
+            }
+
+            return ListView.builder(
+              padding: const EdgeInsets.all(20),
+              itemCount: list.length,
+              itemBuilder: (context, index) {
+                final p = list[index];
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: _PengingatCard(pengingat: p),
+                );
+              },
+            );
+          },
+        ),
       ),
     );
   }
